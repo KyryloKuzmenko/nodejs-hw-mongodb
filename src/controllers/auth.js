@@ -1,3 +1,4 @@
+//-----
 import { ONE_DAY } from "../constants/index.js";
 import { refreshUsersSession, registerUser } from "../servisces/auth.js";
 import { loginUser } from "../servisces/auth.js";
@@ -16,10 +17,8 @@ export const registerUserController = async (req, res) => {
 export const loginUserController = async (req, res) => {
     const session = await loginUser(req.body);
 
-    res.cookie('refreshToken', session.refreshToken, {
-        httpOnly: true,
-        expires: new Date(Date.now() + ONE_DAY),
-    });
+    setupSession(res, session);
+
     res.json({
         status: 200,
         message: 'Successfully logged in an user',
