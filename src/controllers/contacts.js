@@ -14,9 +14,10 @@ import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactsController = async (req, res, next) => {
   try {
+    const { _id: userId } = req.user;
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
-    const filter = { ...parseFilterParams(req.query), userId: req.user._id };
+    const filter = { ...parseFilterParams(req.query), userId };
 
     const contacts = await getAllContacts({
       page,
