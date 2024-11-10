@@ -13,10 +13,11 @@ import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 
 export const getContactsController = async (req, res, next) => {
-  try {
+
     const { _id: userId } = req.user;
     const { page, perPage } = parsePaginationParams(req.query);
     const { sortBy, sortOrder } = parseSortParams(req.query);
+    const { isFavourite, contactType } = parseFilterParams(req.query);
     const filter = { ...parseFilterParams(req.query), userId };
 
     const contacts = await getAllContacts({
@@ -25,26 +26,25 @@ export const getContactsController = async (req, res, next) => {
       sortBy,
       sortOrder,
       filter,
+      isFavourite,
+      contactType,
+      userId,
     });
 
     res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts,
+      data: contacts.data,
     });
-  } catch (error) {
-    next(error);
-  }
 };
 
 export const getContactsByIdController = async (req, res) => {
   const { contactId } = req.params;
-  const contact = await getContactById(contactId, req.user._id);
+  const contact = await getContactById(contactId);
 
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
   }
-
   res.status(200).json({
     status: 200,
     message: `Successfully found contact with id ${contactId}!`,
@@ -79,7 +79,7 @@ export const patchContactController = async (req, res, next) => {
   res.json({
     status: 200,
     message: `Successfully patched a contact`,
-    data: result,
+    data: result.contact,
   });
 };
 
