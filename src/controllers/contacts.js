@@ -34,7 +34,7 @@ export const getContactsController = async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
-      data: contacts.data,
+      contacts,
     });
 };
 
