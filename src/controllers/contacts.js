@@ -34,7 +34,7 @@ export const getContactsController = async (req, res, next) => {
     res.status(200).json({
       status: 200,
       message: 'Successfully found contacts!',
-      contacts,
+      data: contacts,
     });
 };
 
@@ -78,7 +78,7 @@ export const patchContactController = async (req, res) => {
   res.json({
     status: 200,
     message: `Successfully patched a contact`,
-    data: result.contact,
+    data: result,
   });
 };
 
