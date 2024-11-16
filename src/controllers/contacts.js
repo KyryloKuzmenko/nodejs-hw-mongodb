@@ -15,29 +15,28 @@ import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 
 export const getContactsController = async (req, res, next) => {
+  const { _id: userId } = req.user;
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query);
+  const { isFavourite, contactType } = parseFilterParams(req.query);
+  const filter = { ...parseFilterParams(req.query), userId };
 
-    const { _id: userId } = req.user;
-    const { page, perPage } = parsePaginationParams(req.query);
-    const { sortBy, sortOrder } = parseSortParams(req.query);
-    const { isFavourite, contactType } = parseFilterParams(req.query);
-    const filter = { ...parseFilterParams(req.query), userId };
+  const contacts = await getAllContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+    isFavourite,
+    contactType,
+    userId,
+  });
 
-    const contacts = await getAllContacts({
-      page,
-      perPage,
-      sortBy,
-      sortOrder,
-      filter,
-      isFavourite,
-      contactType,
-      userId,
-    });
-
-    res.status(200).json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully found contacts!',
+    data: contacts,
+  });
 };
 
 export const getContactsByIdController = async (req, res) => {
@@ -54,7 +53,18 @@ export const getContactsByIdController = async (req, res) => {
   });
 };
 
-export const createContactsControllers = async (req, res, next) => {
+export const createContactsControllers = async (req, res) => {
+  const photo = req.file;
+  let photoUrl;
+
+  if (photo) {
+    if (env('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+    req.body.photo = photoUrl;
+  }
   const newContact = {
     ...req.body,
     userId: req.user._id,
@@ -86,9 +96,9 @@ export const patchContactController = async (req, res) => {
 
   const result = await updateContact(contactId, req.user._id, req.body);
 
-   if (!result) {
-     throw createHttpError(404, `Contact with id=${contactId} not found`);
-   }
+  if (!result) {
+    throw createHttpError(404, `Contact with id=${contactId} not found`);
+  }
 
   res.json({
     status: 200,
