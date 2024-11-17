@@ -1,0 +1,43 @@
+type: object
+required:
+  - _id
+  - name
+  - phoneNumber
+  - contactType
+properties:
+  _id:
+    description: "Contact's id"
+    type: string
+    example: 673630dd96a3005e64a8ff5d
+  name:
+    description: "Contact's name"
+    type: string
+    example: 'John Doe'
+  phoneNumber:
+    description: "Contact's phone number"
+    type: string
+    example: '+17097227777'
+  contactType:
+    description: "Product's category"
+    type: string
+    enum: ['work', 'home', 'personal']
+    example: 'personal'
+  email:
+    description: 'Email contact'
+    type: string
+    example: 'joe@example.com'
+  isFavourite:
+    description: 'Contact is favourite'
+    type: boolean
+    example: false
+    default: false
+  userId:
+    description: "User's id"
+    type: string
+    example: 673562ec6cd0a8bb667ae69f
+  photo:
+    description: "Contact's photo"
+    type: string
+    example: https://res.cloudinary.com/dyqbrxenv/image/upload/v1731692648/sed64lv64iepqhv0pr46.jpg
+    default: null
+    format: binary
