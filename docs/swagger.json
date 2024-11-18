@@ -434,8 +434,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "Get contact by id"
+          "204": {
+            "description": "No content"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -917,7 +917,8 @@
           "_id",
           "name",
           "phoneNumber",
-          "contactType"
+          "contactType",
+          "email"
         ],
         "properties": {
           "_id": {
