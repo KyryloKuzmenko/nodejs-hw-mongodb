@@ -13,7 +13,7 @@ parameters:
       type: string
       example: '6730c0ac6a44739cbc3162b9'
 responses:
-  '200':
+  '204':
     description: 'Get contact by id'
   '401':
     $ref: '../../../components/responses/401.yaml'
